@@ -1,0 +1,52 @@
+Sub CATMain()
+
+Dim FileSys As Scripting.FileSystemObject
+Dim Stream As Scripting.TextStream
+
+Set FileSys = CreateObject("Scripting.FileSystemObject")
+Set Stream = FileSys.CreateTextFile("C:\Temp\CatParameters.txt", True)
+
+Dim documents1 As Documents
+Set documents1 = CATIA.Documents
+
+Dim parameters1 As Parameters
+Dim n As Integer
+
+If InStr(documents1.Item(1).FullName, "CATPart") Then
+    Dim partDocument1 As PartDocument
+    Set partDocument1 = documents1.Item(1)
+    
+    Dim part1 As Part
+    Set part1 = partDocument1.Part
+
+    Set parameters1 = part1.Parameters
+    
+    n = 1
+    
+    Do While n < parameters1.Count
+        Stream.WriteLine (parameters1.Item(n).Name & Chr(9) & parameters1.Item(n).ValueAsString)
+        n = n + 1
+    Loop
+    
+ElseIf InStr(documents1.Item(1).FullName, "CATProduct") Then
+    Dim prodDocument1 As ProductDocument
+    Set prodDocument1 = documents1.Item(1)
+    
+    Dim prod1 As Product
+    Set prod1 = prodDocument1.Product
+
+    Set parameters1 = prod1.Parameters
+    
+    n = 1
+    
+    Do While n < parameters1.Count
+        Stream.WriteLine (parameters1.Item(n).Name & Chr(9) & parameters1.Item(n).ValueAsString)
+        n = n + 1
+    Loop
+    
+Else
+    MsgBox "Could Not Identify Item"
+End If
+
+
+End Sub
